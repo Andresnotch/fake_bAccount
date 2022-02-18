@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/picture_bloc.dart';
 import 'circular_button.dart';
 import 'cuenta_item.dart';
 
@@ -11,10 +13,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Future _captureAndShare() async {
-    // TODO
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +20,8 @@ class _ProfileState extends State<Profile> {
         actions: [
           IconButton(
             tooltip: "Compartir pantalla",
-            onPressed: () async {
-              await _captureAndShare();
+            onPressed: () {
+              // TODO
             },
             icon: Icon(Icons.share),
           ),
@@ -35,12 +33,29 @@ class _ProfileState extends State<Profile> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://www.nicepng.com/png/detail/413-4138963_unknown-person-unknown-person-png.png",
-                ),
-                minRadius: 40,
-                maxRadius: 80,
+              BlocConsumer<PictureBloc, PictureState>(
+                listener: (context, state) {
+                  if (state is PictureErrorState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("${state.errorMsg}")),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is PictureSelectedState) {
+                    return CircleAvatar(
+                      backgroundImage: FileImage(state.picture!),
+                      minRadius: 40,
+                      maxRadius: 80,
+                    );
+                  } else {
+                    return CircleAvatar(
+                      backgroundColor: Color.fromARGB(255, 122, 113, 113),
+                      minRadius: 40,
+                      maxRadius: 80,
+                    );
+                  }
+                },
               ),
               SizedBox(height: 16),
               Text(
@@ -66,7 +81,11 @@ class _ProfileState extends State<Profile> {
                     textAction: "Cambiar foto",
                     iconData: Icons.camera_alt,
                     bgColor: Colors.orange,
-                    action: null,
+                    action: () {
+                      BlocProvider.of<PictureBloc>(context).add(
+                        ChangeImageEvent(),
+                      );
+                    },
                   ),
                   CircularButton(
                     textAction: "Ver tutorial",
