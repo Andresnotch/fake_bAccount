@@ -11,14 +11,16 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  http:
   flutter_bloc:
   equatable:
   local_auth:
   flutter_credit_card:
   image_picker:
-  share:
+  share_plus:
   screenshot:
   path_provider:
+  feature_discovery:
 
 dev_dependencies:
   flutter_test:

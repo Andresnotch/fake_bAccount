@@ -20,7 +20,7 @@ class PictureBloc extends Bloc<PictureEvent, PictureState> {
       else
         throw Exception();
     } catch (e) {
-      emit(PictureErrorState(errorMsg: "No se pudo cargar imagen"));
+      emit(PictureErrorState(errorMsg: "Error: No se pudo cargar imagen"));
     }
   }
 
